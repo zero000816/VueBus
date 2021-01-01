@@ -118,6 +118,25 @@ export default {
     },
     handleLogin() {
       this.isShow = true;
+     /* this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          this.$store.dispatch('user/login', this.loginForm).then(() => {
+            this.$router.push({path: this.redirect || '/'})
+            localStorage.setItem('flag', 'false')
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })*/
+    },
+    // 用户通过了验证
+    success(msg) {
+      this.isShow = false; // 通过验证后，需要手动隐藏模态框
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -133,13 +152,7 @@ export default {
           return false
         }
       })
-    },
-    submit() {
-      this.isShow = true;
-    },
-    // 用户通过了验证
-    success(msg) {
-      this.isShow = false; // 通过验证后，需要手动隐藏模态框
+
     },
     // 用户点击遮罩层，应该关闭模态框
     close() {
