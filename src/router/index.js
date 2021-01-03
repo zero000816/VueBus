@@ -65,16 +65,16 @@ export const constantRoutes = [
     }]
   },
 
-  /*{
-    path: '/information',
+  {
+    path: '/user',
     component: Layout,
     children: [{
       path: 'index',
-      component: () => import('@/views/information/index'),
-      name: 'Information',
-      meta: {title: 'information', icon: 'eye'}
+      component: () => import('@/views/manager/user/index'),
+      name: 'user',
+      meta: {title: 'user', icon: 'eye'}
     }]
-  },*/
+  },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

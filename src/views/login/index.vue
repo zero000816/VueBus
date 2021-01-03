@@ -81,7 +81,6 @@ export default {
       loginForm: {
         username: '200121001',
         password: '123456',
-        code: ''
       },
       loginRules: {
         username: [{required: true, trigger: 'blur', validator: validateUsername}],
@@ -141,8 +140,8 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
+            console.log("on")
             this.$router.push({path: this.redirect || '/'})
-            localStorage.setItem('flag', 'false')
             this.loading = false
           }).catch(() => {
             this.loading = false

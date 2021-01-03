@@ -1,11 +1,11 @@
 <template>
-  <div class="dashboard-container"
-       v-loading.fullscreen.lock="fullscreenLoading">
+  <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
-    <div >token: {{token}}</div>
+    <div >roles: {{roles}}</div>
+<!--    <div >token: {{token}}</div>
     <div> dorm: {{dormName}}</div>
     <div>student: {{studentID}}</div>
-    <div>flag:{{flag}}</div>
+    <div>flag:{{flag}}</div>-->
   </div>
 </template>
 
@@ -17,37 +17,13 @@ export default {
   computed: {
     ...mapGetters([
       'name',
-      'token',
-      'dormName',
-      'studentID',
-
+      'roles'
     ]),
 
   },
   data(){
     return{
-      fullscreenLoading :false,
-      flag: localStorage.getItem('flag')
     }
-  },
-  created() {
-    if(localStorage.getItem('flag')=='true'){
-      this.fullscreenLoading =true;
-      console.log(this.fullscreenLoading);
-      setTimeout(()=>{
-        this.$store.dispatch('log',this.studentID).then((response)=>{
-          const { data } = response
-          console.log("log的值"+data.flag)
-          if (data.flag=='true'){
-            this.fullscreenLoading=false
-          }
-          })
-        },2000
-      )
-
-
-    }
-
   }
 }
 </script>

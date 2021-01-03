@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/vue/student/login',
+    url: '/user/login',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function login(data) {
 
 export function getInfo(token) {
   return request({
-    url: '/vue/student/info',
+    url: '/user/info',
     method: 'get',
     params: { token }
   })
@@ -18,7 +18,22 @@ export function getInfo(token) {
 
 export function logout() {
   return request({
-    url: '/vue/user/logout',
+    url: '/user/logout',
     method: 'post'
+  })
+}
+
+export function listUser(){
+  return request({
+    url: '/user/list',
+    method: 'get',
+  })
+}
+
+export function addUser(data){
+  return request({
+    url: '/user/add',
+    method: 'post',
+    data
   })
 }

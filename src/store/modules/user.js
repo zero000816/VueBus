@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo,listUser,addUser } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -7,10 +7,7 @@ const getDefaultState = () => {
     token: getToken(),
     name: '',
     avatar: '',
-    dormName: '',
-    studentID: '',
-    verifyCode:'',
-    flag:''
+    roles:''
   }
 }
 
@@ -29,17 +26,8 @@ const mutations = {
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
-  SET_DORM: (state, dormName) => {
-    state.dormName = dormName
-  },
-  SET_STUDENT: (state, studentID) => {
-    state.studentID = studentID
-  },
-  SET_VERIFYCODE:(state,verifyCode)=>{
-    state.verifyCode=verifyCode
-  },
-  SET_FLAG: (state,flag)=>{
-    state.flag=flag
+  SER_ROLES:(state,roles) =>{
+    state.roles =roles
   }
 }
 
@@ -48,7 +36,7 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ studentID: username.trim(), verifyCode: password }).then(response => {
+      login({ workID: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
@@ -71,23 +59,10 @@ const actions = {
           return reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar,dormName,studentID,verifyCode} = data
-        if(dormName==""||dormName==null){
-          commit('SET_DORM',"未分配")
-        }
-        else {
-          commit('SET_DORM', dormName)
-        }
+        const { name, avatar,roles} = data
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
-        commit('SET_STUDENT',studentID)
-        commit('SET_VERIFYCODE',verifyCode)
-
-/*        if (this.getters.flag===''){
-          console.log("test")
-          commit('SET_FLAG','false')
-        }*/
-        console.log("每次刷新都要进入主界面吗")
+        commit('SER_ROLES',roles)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -122,7 +97,26 @@ const actions = {
       commit('SET_FLAG',"true")
       resolve()
     })
-  }
+  },
+
+  listUser(){
+    return new Promise((resolve, reject) => {
+      listUser().then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  addUser({commit}, userVO) {
+    return new Promise((resolve, reject) => {
+      addUser(userVO).then(response => {
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
 }
 
 export default {
