@@ -12,6 +12,9 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import md5 from 'js-md5'
+
+
 import '@/icons' // icon
 import '@/permission' // permission control
 

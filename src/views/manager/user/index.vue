@@ -1,12 +1,42 @@
 <template>
-  <div>
+  <div style="margin-left: 10%;margin-top: 30px">
     <el-button
       type="primary"
-    >
-      添加成员
+      @click="dialogVisible=true"
+    >添加成员
     </el-button>
+      <el-dialog
+        title="添加成员"
+        :visible.sync="dialogVisible"
+        width="30%"
+        >
+        <el-form :model="ruleForm" status-icon :rules="addRules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+          <el-form-item label="角色" prop="role">
+            <el-checkbox-group v-model="ruleForm.roles">
+              <el-checkbox-button v-for="role in rolesOption" :label="role" :key="role">{{role}}</el-checkbox-button>
+            </el-checkbox-group>
+            </el-form-item>
+
+          <el-form-item label="工（学）号" prop="workID">
+            <el-input type="workID" v-model="ruleForm.workID" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="用户名" prop="name">
+            <el-input type="username" v-model="ruleForm.name" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="管理员密码" prop="adminPassword">
+            <el-input type="password" v-model="ruleForm.adminPassword" autocomplete="off"></el-input>
+          </el-form-item>
+
+          <el-form-item>
+            <el-button type="primary" @click="submitAdd('ruleForm')">提交</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+
     <el-table
-      data="users"
       ref="multipleTable"
       :data="tableData"
       border
@@ -25,15 +55,17 @@
       <el-table-column
         label="权限"
         sortable="custom"
-        prop="role"
         style="width: 20%"
       >
+        <template slot-scope="scope">
+          <span v-for="(item,index) in scope.row.role" :key="index" >{{item}}&nbsp</span>
+        </template>
       </el-table-column>
 
       <el-table-column
         label="工号"
         sortable="custom"
-        prop="workId"
+        prop="workID"
         style="width: 20%"
       >
       </el-table-column>
@@ -42,7 +74,7 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑
+            @click="handleUnlock(scope.$index, scope.row)">解锁
           </el-button>
           <el-button
             size="mini"
@@ -52,49 +84,89 @@
         </template>
       </el-table-column>
     </el-table>
-
     <el-dialog
-      title="编辑"
-      :visible.sync="editDialogVisible"
+      title="管理员密码验证"
+      :visible.sync="verifyDialogVisible"
       width="30%"
-      model="edit">
-      <el-form style="margin-left: 50px" :model="edit" size="small">
-        <el-form-item label="工号">
-          {{ edit.workId }}
-        </el-form-item>
-        <el-form-item label="姓名">
-          {{ edit.name }}
-        </el-form-item>
-        <el-form-item label="角色">
-          <el-checkbox-group v-model="edit.role">
-            <el-checkbox id="high" label="high"></el-checkbox>
-            <el-checkbox id="low" label='low'></el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitEditForm">提交</el-button>
+    > 请再次管理员输入密码
+      <el-form
+       v-model="verifyForm">
+      <el-form-item
+      label="管理员密码"
+      :rules="[{required: true ,message: '请输入密码'}]">
+      <el-input type="password" v-model="verifyForm.adminPassword" autocomplete="off"></el-input>
+      </el-form-item>
+    </el-form>
+      <el-button type="primary" @click="submitUnlock">确认</el-button>
+    </el-dialog>
+    <el-dialog
+      title="管理员密码验证"
+      :visible.sync="deleteDialogVisible"
+      width="30%"
+    > 请再次管理员输入密码
+      <el-form
+        v-model="verifyForm">
+        <el-form-item
+          label="管理员密码"
+          :rules="[{required: true ,message: '请输入密码'}]">
+          <el-input type="password" v-model="verifyForm.adminPassword" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
+      <el-button type="primary" @click="submitDelete">确认</el-button>
     </el-dialog>
-
   </div>
 </template>
 
 <script>
 import user from "@/store/modules/user";
+import {validUsername} from "@/utils/validate";
 
 export default {
-
   data() {
+    const validateUsername = (rule, value, callback) => {
+      if (!validUsername(value)) {
+        callback(new Error('请输入正确的工号（学号）'))
+      } else {
+        callback()
+      }
+    }
     return {
-      tableData: [],
-      editDialogVisible: false,
-      edit: {
-        name: 'az',
-        role: [],
-        workId: '',
+      tableData: {
+         role:[]
       },
-      list:[]
+
+      user: {
+        name: '',
+        role: [],
+        workID: '',
+      },
+
+      rolesOption:['student','busAdmin','superAdmin'],
+      ruleForm:{
+        adminWorkID: this.$store.getters.workID,
+        name: '',
+        roles: ['student'],
+        workID: '',
+        password:'123456',
+        adminPassword:''
+      },
+
+      addRules:{
+        name :[{required: true,trigger: 'blur'}],
+        role:[{required: true,trigger: 'blur'}],
+        workID:[{required: true, trigger: 'blur', validator:validateUsername}],
+        password:[{required: true,trigger: 'blur'}],
+        adminPassword:[{required: true,trigger: 'blur'}],
+      },
+      verifyForm:{
+        adminWorkID:this.$store.getters.workID,
+        workID:'',
+        adminPassword:''
+      },
+      adminPassword:'',
+      dialogVisible:false,
+      deleteDialogVisible:false,
+      verifyDialogVisible:false
     }
   },
   created() {
@@ -105,28 +177,62 @@ export default {
     refreshTable() {
       this.$store.dispatch('user/listUser').then(response => {
         const {data} = response
-        console.log(data)
         this.tableData = data
       })
     },
 
-    handleEdit(index, row) {
-      this.editDialogVisible = true;
-      this.edit = this.copy(row)
+    handleUnlock(index,row){
+      this.verifyDialogVisible=true
+      this.verifyForm.workID=row.workID
     },
-    copy(obj1) {
-      let obj2 = {};
-      for (let i in obj1) {
-        obj2[i] = obj1[i];
-      }
-      return obj2;
+    handleDelete(index,row){
+      this.deleteDialogVisible=true
+      this.verifyForm.workID=row.workID
+    },
+    submitUnlock(){
+      console.log(this.verifyForm)
+      this.$store.dispatch('user/unlock',this.verifyForm).then(()=>{
+        this.verifyDialogVisible=false
+        this.refreshTable()
+        this.$notify({
+          message:"解锁成功"
+        })
+      }).catch(() => {
+      })
+      this.refreshTable()
+    },
+    submitDelete(){
+      console.log(this.verifyForm)
+      this.$store.dispatch('user/deleteUser',this.verifyForm).then(()=>{
+        this.deleteDialogVisible=false
+        this.refreshTable()
+        this.$notify({
+          message:"删除成功"
+        })
+      }).catch(() => {
+      })
+      this.refreshTable()
+    },
+//关闭清空表单？
+    submitAdd(){
+      console.log(this.ruleForm)
+      this.$store.dispatch('user/addUser',this.ruleForm).then(()=>{
+        this.verifyDialogVisible=false
+        this.refreshTable()
+        this.$notify({
+          message:"添加成功"
+        })
+      }).catch(() => {
+      })
+      this.refreshTable()
     },
 
-    submitEditForm() {
+//关闭清空表单？
+    /*submitEditForm() {
       let userVo={
-        name: this.edit.name,
-        role: this.edit.role,
-        workId: this.edit.workId
+        name: this.user.name,
+        role: this.user.role,
+        workID: this.user.workID
       }
       console.log(userVo)
       this.$store.dispatch('user/modifyRole', userVo).then(() => {
@@ -135,7 +241,7 @@ export default {
       }).catch(() => {
       })
       this.refreshTable()
-    },
+    },*/
 
   }
 }

@@ -1,13 +1,15 @@
-import { login, logout, getInfo,listUser,addUser } from '@/api/user'
+import {login, logout, getInfo, listUser, addUser, modifyPassword, unlock, deleteUser} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import md5 from 'js-md5';
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
     avatar: '',
-    roles:''
+    roles:'',
+    workID:'',
   }
 }
 
@@ -26,8 +28,11 @@ const mutations = {
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
-  SER_ROLES:(state,roles) =>{
+  SET_ROLES:(state,roles) =>{
     state.roles =roles
+  },
+  SET_WORKID:(state,workID) =>{
+    state.workID=workID
   }
 }
 
@@ -36,7 +41,8 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ workID: username.trim(), password: password }).then(response => {
+      login({ workID: username.trim(), password: md5(password) }).then(response => {
+        //trim 表示删除头尾空白字符
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
@@ -46,7 +52,6 @@ const actions = {
       })
     })
   },
-
 
 
   // get user info
@@ -59,10 +64,11 @@ const actions = {
           return reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar,roles} = data
+        const { name, avatar,roles,workID} = data
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
-        commit('SER_ROLES',roles)
+        commit('SET_ROLES',roles)
+        commit('SET_WORKID',workID)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -92,13 +98,7 @@ const actions = {
       resolve()
     })
   },
-  change({ commit }) {
-    return new Promise(resolve => {
-      commit('SET_FLAG',"true")
-      resolve()
-    })
-  },
-
+  // get user list
   listUser(){
     return new Promise((resolve, reject) => {
       listUser().then(response => {
@@ -108,15 +108,54 @@ const actions = {
       })
     })
   },
+
+  // add user
   addUser({commit}, userVO) {
+    const {adminWorkID,workID,adminPassword,roles,password,name}=userVO
     return new Promise((resolve, reject) => {
-      addUser(userVO).then(response => {
-        resolve()
+      addUser({adminWorkID:adminWorkID,workID:workID,adminPassword:md5(adminPassword),roles:roles,password:md5(password),name:name}).then(response => {
+        resolve(response)
       }).catch(error => {
         reject(error)
       })
     })
   },
+
+  modifyPassword({commit},userVO){
+    const { workID, originalPassword,password } = userVO
+    return new Promise((resolve, reject) => {
+      modifyPassword({ workID: workID.trim(), password: md5(password),originalPassword:md5(originalPassword)}).then(response => {
+        resolve(response)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  unlock({commit},unlockInfo){
+    const {adminWorkID,workID,adminPassword}= unlockInfo
+    return new Promise((resolve,reject)=>{
+      unlock({adminWorkID:adminWorkID,workID:workID,adminPassword:md5(adminPassword)}).then(response=>{
+        resolve(response)
+      }).catch(error=>{
+        reject(error)
+      })
+      }
+    )
+  },
+
+  deleteUser({commit},deleteInfo){
+    const {adminWorkID,workID,adminPassword}= deleteInfo
+    return new Promise((resolve,reject)=>{
+        deleteUser({adminWorkID:adminWorkID,workID:workID,adminPassword:md5(adminPassword)}).then(response=>{
+          resolve(response)
+        }).catch(error=>{
+          reject(error)
+        })
+      }
+    )
+  }
+
 }
 
 export default {

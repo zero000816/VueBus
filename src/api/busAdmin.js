@@ -1,17 +1,17 @@
 import request from '@/utils/request'
 
-export function listStudents(){
+export function listPassenger(){
   return request({
-    url: '/student/list',
+    url: '/bus/list',
     method: 'get'
   })
 }
 
-export function submit(data){
+export function submitBus(data) {
   return request({
-    url: '/student/submit',
+    url: '/bus/submit',
     method: 'post',
     data
   })
-
 }
+

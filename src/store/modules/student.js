@@ -1,4 +1,4 @@
-import {addStudent, getStudent, listStudents,submit,log} from '@/api/student'
+import {listStudents,submit} from '@/api/student'
 
 const actions = {
   listStudents({commit}){

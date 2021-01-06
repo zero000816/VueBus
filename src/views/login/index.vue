@@ -65,7 +65,7 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入正确的工号（学号）'))
       } else {
         callback()
       }
@@ -89,7 +89,6 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      identifyCodes: [],
       isShow: false
     }
 
@@ -135,7 +134,6 @@ export default {
     },
     // 用户通过了验证
     success(msg) {
-      this.isShow = false; // 通过验证后，需要手动隐藏模态框
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true

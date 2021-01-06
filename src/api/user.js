@@ -37,3 +37,27 @@ export function addUser(data){
     data
   })
 }
+export function modifyPassword(data){
+  return request({
+    url: '/user/modify',
+    method: 'post',
+    data
+  })
+}
+
+export function unlock(data){
+  return request({
+    url: '/user/unlock',
+    method: 'post',
+    data
+  })
+}
+
+export function deleteUser(data){
+  return request({
+    url: 'user/deleteUser',
+    method:'post',
+    data
+  })
+
+}

@@ -1,11 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
-    <div >roles: {{roles}}</div>
-<!--    <div >token: {{token}}</div>
-    <div> dorm: {{dormName}}</div>
-    <div>student: {{studentID}}</div>
-    <div>flag:{{flag}}</div>-->
+    <div >roles: {{ roles}}</div>
   </div>
 </template>
 
@@ -19,12 +15,7 @@ export default {
       'name',
       'roles'
     ]),
-
   },
-  data(){
-    return{
-    }
-  }
 }
 </script>
 

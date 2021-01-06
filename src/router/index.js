@@ -42,6 +42,12 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
+  {
+    path: '/modifyPassword',
+    component: ()=>import('@/views/modifyPassword/index'),
+    hidden: true
+  },
+
 
   {
     path: '/',
@@ -66,6 +72,17 @@ export const constantRoutes = [
   },
 
   {
+    path: '/bus',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component:()=>import('@/views/bus/index'),
+      name: 'bus',
+      meta: {title: 'bus', icon: 'form'}
+    }]
+  },
+
+  {
     path: '/user',
     component: Layout,
     children: [{
@@ -73,6 +90,17 @@ export const constantRoutes = [
       component: () => import('@/views/manager/user/index'),
       name: 'user',
       meta: {title: 'user', icon: 'eye'}
+    }]
+  },
+
+  {
+    path: '/busPassenger',
+    component:Layout,
+    children: [{
+      path:'index',
+      component:()=> import('@/views/manager/busPassenger/index'),
+      name: 'busPassenger',
+      meta: {title: 'busPassenger',icon:'eye'}
     }]
   },
 
