@@ -1,55 +1,25 @@
-import {listStudents,submit} from '@/api/student'
+import {order,info} from '@/api/student'
 
 const actions = {
-  listStudents({commit}){
+
+  order({commit}){
     return new Promise((resolve, reject) =>{
-      listStudents().then(response=>{
+      order().then(response=>{
         resolve(response)
       }).catch(error => {
         reject(error)
       })
     })
   },
-  addStudent({commit}, studentVO){
+  info({commit}){
     return new Promise((resolve, reject) =>{
-      addStudent(studentVO).then(response=>{
+      info().then(response=>{
         resolve(response)
       }).catch(error => {
         reject(error)
       })
     })
   },
-  submit({commit},form){
-
-    return new Promise((resolve, reject) =>{
-      submit(form).then(response=>{
-        resolve(response)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
-  getStudent({commit},studentID) {
-    return new Promise((resolve, reject) =>{
-      getStudent(studentID).then(response => {
-        resolve(response)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
-  log({commit},studentID) {
-    return new Promise((resolve, reject) =>{
-      log(studentID).then(response => {
-
-        resolve(response)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
 
 }
 

@@ -37,7 +37,7 @@
 export default {
   data() {
     return {
-      num: 1,
+      num: localStorage.getItem("passengerNum"),
       passengerData:[{
         name:'az',
         workID:'',
@@ -51,7 +51,7 @@ export default {
     refreshTable(){
       this.$store.dispatch('listPassenger').then(response=>{
         const {data}=response
-        this.passengerData =data
+        this.passengerData =response.data
       })
     }
   }

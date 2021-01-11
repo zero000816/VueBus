@@ -37,17 +37,12 @@ export const constantRoutes = [
     hidden: true
   },
 
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
+
   {
     path: '/modifyPassword',
     component: ()=>import('@/views/modifyPassword/index'),
     hidden: true
   },
-
 
   {
     path: '/',
@@ -61,15 +56,24 @@ export const constantRoutes = [
     }]
   },
   {
-    path: '/choose',
-    component: Layout,
-    children: [{
-      path: 'index',
-      component: () => import('@/views/choose/index'),
-      name: 'Choose',
-      meta: {title: 'Choose', icon: 'form'}
-    }]
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
   },
+]
+export const asyncRoutes = [
+  {
+    path:'/order',
+    component: Layout,
+    children:[{
+      path: 'index',
+      component: () => import('@/views/student/order/index'),
+      name: 'order',
+      meta:{title:'order',icon:'el-icon-circle-check',roles: ['student']}
+    }]
+
+  },
+
 
   {
     path: '/bus',
@@ -78,7 +82,7 @@ export const constantRoutes = [
       path: 'index',
       component:()=>import('@/views/bus/index'),
       name: 'bus',
-      meta: {title: 'bus', icon: 'form'}
+      meta: {title: '确认校车人数', icon: 'el-icon-circle-check',roles: ['busAdmin']}
     }]
   },
 
@@ -89,10 +93,9 @@ export const constantRoutes = [
       path: 'index',
       component: () => import('@/views/manager/user/index'),
       name: 'user',
-      meta: {title: 'user', icon: 'eye'}
+      meta: {title: 'user', icon: 'eye',roles: ['superAdmin']}
     }]
   },
-
   {
     path: '/busPassenger',
     component:Layout,
@@ -100,7 +103,7 @@ export const constantRoutes = [
       path:'index',
       component:()=> import('@/views/manager/busPassenger/index'),
       name: 'busPassenger',
-      meta: {title: 'busPassenger',icon:'eye'}
+      meta: {title: '校车乘客',icon:'form',roles: ['busAdmin']}
     }]
   },
 

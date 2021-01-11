@@ -39,9 +39,14 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log(this.busForm)
-          this.$store.dispatch('submitBus',this.busForm).then(()=> {
+          localStorage.setItem('passengerNum',this.busForm.number)
+          this.$store.dispatch('submitBus',this.busForm).then((response)=> {
             console.log(this.busForm)
             /*this.$router.push({path: this.redirect || '/busPassenger'})*/
+            this.$message({
+              message: response.message,
+              center: true
+            })
           })
         } else {
           console.log('error submit!!');
