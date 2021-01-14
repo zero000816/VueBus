@@ -3,14 +3,14 @@ import request from '@/utils/request'
 
 export function order(token){
   return request({
-    url: '/bus/order',
+    url: '/student/order',
     method: 'get',
     params: { token }
   })
 }
 export function info(token){
   return request({
-    url: '/bus/information',
+    url: '/student/information',
     method: 'get',
     params: { token }
   })

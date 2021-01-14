@@ -56,6 +56,22 @@ export const constantRoutes = [
     }]
   },
   {
+    path:'/movie',
+    component:()=>import('@/views/test/index'),
+    hidden: true
+  },
+  {
+    path:'/answer',
+    component:()=>import('@/views/test/answer'),
+    hidden: true
+  },
+  {
+    path:'/information',
+    component:()=>import('@/views/test/information'),
+    hidden: true
+  },
+
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
@@ -71,7 +87,6 @@ export const asyncRoutes = [
       name: 'order',
       meta:{title:'order',icon:'el-icon-circle-check',roles: ['student']}
     }]
-
   },
 
 
@@ -106,7 +121,11 @@ export const asyncRoutes = [
       meta: {title: '校车乘客',icon:'form',roles: ['busAdmin']}
     }]
   },
-
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
